@@ -27,7 +27,7 @@ The model's output is the recommendation priority, which can be low, medium, or 
 
 ## Output results with plotly
 
-![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20.png)
+https://github.com/airidas23/fuzzylogika/blob/master/newplot.png
 ![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(1).png)
 ![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(2).png)
 ![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(3).png)
