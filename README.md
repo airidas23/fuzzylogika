@@ -39,4 +39,4 @@ The model's output is the recommendation priority, which can be low, medium, or 
 3. The Tipping Problem - The Hard Way, scikit-fuzzy development team [https://pythonhosted.org/scikit- fuzzy/auto_examples/plot_tipping_problem.html fbclid=IwAR0L_gZ1h6Kb_9SAxrXZ _PPv4 n80uLdZgbSsKCd8RfLW3lZzyrUdiMHiC0s]
 4. Scatterplot Matrix in Python [https://plotly.com/python/splom/]
 
-![Informacinio saugumo modelis](https://app.powerbi.com/groups/me/reports/be035bb7-85b0-4b15-b938-9570225d43d3/ReportSection)
+
