@@ -1,6 +1,5 @@
 import numpy as np
 import skfuzzy as fuzz
-import matplotlib.pyplot as plt
 import plotly.graph_objs as go
 
 # Kintamųjų matmenys
@@ -60,23 +59,35 @@ def sprendimo_priemimas(atak_sunk, sist_svarb, prieg_lyg, atak_tip, rekomendacij
     rp_zemas_activ = np.fmin(np.fmin(as_level_zemas, at_level_ddos), rp_zemas)
     rp_zemas_activ = np.fmax(rp_zemas_activ, np.fmin(ss_level_zemas, at_malware))
     rp_zemas_activ = np.fmax(rp_zemas_activ, np.fmin(pl_level_aukstas, at_level_social_engineering))
+    rp_zemas_activ = np.fmax(rp_zemas_activ, np.fmin(pl_level_zemas, at_level_phishing))
+    rp_zemas_activ = np.fmax(rp_zemas_activ, np.fmin(ss_level_zemas, at_level_ddos))
 
     # Rekomendacijos prioritetas vidutinis
     rp_vidutinis_active = np.fmin(ss_level_vidutinis, at_level_phishing)
     rp_vidutinis_active = np.fmax(rp_vidutinis_active, np.fmin(pl_level_vidutinis, at_level_ddos))
     rp_vidutinis_active = np.fmax(rp_vidutinis_active, np.fmin(pl_aukstas, at_level_ddos))
+    rp_vidutinis_active = np.fmax(rp_vidutinis_active, np.fmin(as_level_vidutinis, at_level_malware))
+    rp_vidutinis_active = np.fmax(rp_vidutinis_active, np.fmin(ss_level_vidutinis, at_level_social_engineering))
 
     # Rekomendacijos prioritetas aukštas
     rp_aukstas_active = np.fmax(np.fmin(as_level_aukstas, ss_level_aukstas), rp_aukstas)
     rp_aukstas_active = np.fmax(rp_aukstas_active, np.fmin(pl_aukstas, at_level_malware))
+    rp_aukstas_active = np.fmax(rp_aukstas_active, np.fmin(as_level_aukstas, at_level_phishing))
+    rp_aukstas_active = np.fmax(rp_aukstas_active, np.fmin(ss_level_aukstas, at_level_social_engineering))
 
     # Rekomendacijos prioriteto išvestis
-    rp_aggregated = np.fmax(rp_zemas_activ, np.fmax(rp_vidutinis, rp_zemas_activ))
+    rp_aggregated = np.fmax(rp_zemas_activ, np.fmax(rp_vidutinis_active, rp_aukstas_active))
 
     # Defuzzification
-    prioritetas = fuzz.defuzz(rekomendacijos_prioritetas, rp_aggregated, 'centroid')
 
-    return prioritetas, rp_zemas_activ, rp_vidutinis_active, rp_aukstas_active
+    prioritetas_centroid = fuzz.defuzz(rekomendacijos_prioritetas, rp_aggregated, 'centroid')
+    prioritetas_bisector = fuzz.defuzz(rekomendacijos_prioritetas, rp_aggregated, 'bisector')
+    prioritetas_mom = fuzz.defuzz(rekomendacijos_prioritetas, rp_aggregated, 'mom')  # mean of maximum
+    prioritetas_som = fuzz.defuzz(rekomendacijos_prioritetas, rp_aggregated, 'som')  # min of maximum
+    prioritetas_lom = fuzz.defuzz(rekomendacijos_prioritetas, rp_aggregated, 'lom')  # max of maximum
+
+    return prioritetas_lom, prioritetas_som, prioritetas_mom, prioritetas_centroid, \
+           prioritetas_bisector, rp_zemas_activ, rp_vidutinis_active, rp_aukstas_active
 
 
 # def prioriteto_reiksme(prioritetas):
@@ -96,22 +107,56 @@ def sprendimo_priemimas(atak_sunk, sist_svarb, prieg_lyg, atak_tip, rekomendacij
 #     return reiksme, diapazonas
 
 # Testavimas
-atak_sunk = 50
-sist_svarb = 50
-prieg_lyg = 50
-atak_tip = 50
+# atak_sunk = 10
+# sist_svarb = 30
+# prieg_lyg = 50
+# atak_tip = 10
+#
+# # # Papildomas testavimas su kitais duomenimis
+# # atak_sunk = 80
+# # sist_svarb = 80
+# # prieig_lyg = 30
+# # atak_tip = 20
+#
+# prioritetas_lom, prioritetas_som, prioritetas_mom, prioritetas_centroid, \
+#            prioritetas_bisector, prioritetas, rp_zemas_activ, rp_vidutinis_active, rp_aukstas_active = sprendimo_priemimas(atak_sunk, sist_svarb,
+#                                                                                           prieg_lyg, atak_tip,
+#                                                                                           rekomendacijos_prioritetas)
+# # reiksme, diapazonas = prioriteto_reiksme(prioritetas)
+# print(f"Rekomendacijos prieritetas: {prioritetas}")
+# print(f"Rekomendacijos prioritetas (Centroid): {prioritetas_centroid:.2f}")
+# print(f"Rekomendacijos prioritetas (Bisector): {prioritetas_bisector:.2f}")
+# print(f"Rekomendacijos prioritetas (Mean of Maximum): {prioritetas_mom:.2f}")
+# print(f"Rekomendacijos prioritetas (Min of Maximum): {prioritetas_som:.2f}")
+# print(f"Rekomendacijos prioritetas (Max of Maximum): {prioritetas_lom:.2f}")
 
-# # Papildomas testavimas su kitais duomenimis
-# atak_sunk = 80
-# sist_svarb = 80
-# prieig_lyg = 30
-# atak_tip = 20
 
-prioritetas, rp_zemas_activ, rp_vidutinis_active, rp_aukstas_active = sprendimo_priemimas(atak_sunk, sist_svarb,
-                                                                                          prieg_lyg, atak_tip,
-                                                                                          rekomendacijos_prioritetas)
-# reiksme, diapazonas = prioriteto_reiksme(prioritetas)
-print(f"Rekomendacijos prieritetas: {prioritetas}")
+# Testavimo duomenų sąrašas
+test_data = [
+    # {"atak_sunk": 10, "sist_svarb": 30, "prieg_lyg": 50, "atak_tip": 10}
+    # {"atak_sunk": 80, "sist_svarb": 80, "prieg_lyg": 30, "atak_tip": 20},
+    # {"atak_sunk": 50, "sist_svarb": 20, "prieg_lyg": 70, "atak_tip": 60},
+    # {"atak_sunk": 90, "sist_svarb": 60, "prieg_lyg": 40, "atak_tip": 80},
+    {"atak_sunk": 30, "sist_svarb": 40, "prieg_lyg": 90, "atak_tip": 30}
+]
+
+# Testavimo scenarijus
+for i, data in enumerate(test_data, 1):
+    print(f"Testavimo scenarijus {i}:")
+    print(f"Atakos sunkumas: {data['atak_sunk']}, Sistemos svarba: {data['sist_svarb']}, "
+          f"Prieigos lygis: {data['prieg_lyg']}, Atakos tipas: {data['atak_tip']}")
+
+    prioritetas_lom, prioritetas_som, prioritetas_mom, prioritetas_centroid, \
+    prioritetas_bisector, rp_zemas_activ, rp_vidutinis_active, rp_aukstas_active = sprendimo_priemimas(
+        data['atak_sunk'], data['sist_svarb'],
+        data['prieg_lyg'], data['atak_tip'],
+        rekomendacijos_prioritetas)
+    print(f"Rekomendacijos prioritetas (Centroid): {prioritetas_centroid:.2f}")
+    print(f"Rekomendacijos prioritetas (Bisector): {prioritetas_bisector:.2f}")
+    print(f"Rekomendacijos prioritetas (Mean of Maximum): {prioritetas_mom:.2f}")
+    print(f"Rekomendacijos prioritetas (Min of Maximum): {prioritetas_som:.2f}")
+    print(f"Rekomendacijos prioritetas (Max of Maximum): {prioritetas_lom:.2f}")
+    print()
 
 # Grafinis rezultatų atvaizdavimas
 
