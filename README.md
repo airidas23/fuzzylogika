@@ -24,4 +24,10 @@ The number of system inputs and fuzzy sets is 4 × 3.
 ## Recommendation Priority
 
 The model's output is the recommendation priority, which can be low, medium, or high. The model allows determining the recommendation priority according to rules defined for attack outputs.
+
+## Output results with plotly
+![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20.png)
 ![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(1).png)
+![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(2).png)
+![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(3).png)
+![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(4).png)
