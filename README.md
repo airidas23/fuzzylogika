@@ -31,7 +31,7 @@ The model's output is the recommendation priority, which can be low, medium, or 
 ![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(1).png)
 ![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(2).png)
 ![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(3).png)
-
+![Informacinio saugumo modelis](https://github.com/airidas23/fuzzylogika/blob/master/newplot%20(4).png)
 ## References 
 
 1. Miglotoji logika paskaita Doc. dr. Agnė Paulauskaitė-Tarasevičienė
